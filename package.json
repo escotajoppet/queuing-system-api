@@ -1,0 +1,22 @@
+{
+  "name": "queueingsystem",
+  "version": "1.0.0",
+  "description": "Queueing system backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/escotajoppet/queueing-system.git"
+  },
+  "keywords": [
+    "queueing"
+  ],
+  "author": "Joppet Escota",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/escotajoppet/queueing-system/issues"
+  },
+  "homepage": "https://github.com/escotajoppet/queueing-system#readme"
+}
