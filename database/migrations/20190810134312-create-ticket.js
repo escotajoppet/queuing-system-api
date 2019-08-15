@@ -10,16 +10,20 @@ module.exports = {
       classification: {
         type: Sequelize.ENUM,
         values: [
-          'pwd|senior',
+          'priority',
           'requeue',
           'normal',
         ],
+      },
+      prefix: {
+        type: Sequelize.ENUM,
+        values: ['P', 'R', 'N'],
       },
       barcode: {
         type: Sequelize.STRING,
       },
       number: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
       },
       functionId: {
         type: Sequelize.INTEGER,

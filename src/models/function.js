@@ -1,7 +1,14 @@
 module.exports = (sequelize, DataTypes) => {
   const functionMod = sequelize.define('function', {
     name: DataTypes.STRING,
-  }, {});
+  }, {
+    indexes: [
+      {
+        unique: true,
+        fields: ['name'],
+      },
+    ],
+  });
 
   functionMod.associate = models => {
     // associations can be defined herec
