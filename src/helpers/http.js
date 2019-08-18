@@ -16,7 +16,6 @@ const dispatch = (obj) => {
   const defaults = {
     data: {},
     error: null,
-    status: 200,
     success: true,
   };
 

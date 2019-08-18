@@ -1,20 +1,26 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-// const basename = path.basename(__filename);
+const bodyParser = require('body-parser');
 
 // Set up the express app
 module.exports = {
-  load: _ => {
-    const app = express();
+  load: resources => {
     const PORT = 3001;
+    const app = express();
+
+    // parse application/x-www-form-urlencoded
+    app.use(bodyParser.urlencoded({ extended: false }));
+
+    // parse application/json
+    app.use(bodyParser.json());
 
     const addRoute = (version, route) => {
       const name = `${version}/${route.split('/').pop().split('.')[0]}`;
 
       console.log(`Adding route: ${name}`);
 
-      require(route)(app);
+      require(route)(app, resources);
     };
 
     const routePath = path.join(__dirname, 'api');
@@ -30,7 +36,7 @@ module.exports = {
       });
 
     app.listen(PORT, _ => {
-      console.log(`server running on port ${PORT}`);
+      console.log(`\nQueuing server running on port ${PORT}...`);
     });
   },
 };

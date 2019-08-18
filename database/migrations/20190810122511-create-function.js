@@ -20,7 +20,14 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
       },
-    });
+    })
+      .then(function() {
+        return queryInterface.sequelize.query(
+          'ALTER TABLE functions ' +
+          'ADD CONSTRAINT functions_unique ' +
+          'UNIQUE (name)'
+        );
+      });
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable('functions');
