@@ -23,9 +23,7 @@ module.exports = (sequelize, DataTypes) => {
           where: {
             [Op.and]: {
               name: instance.name,
-              status: {
-                [Op.or]: ['approved'],
-              },
+              status: 'approved',
             },
           },
         });
