@@ -1,4 +1,4 @@
-const QueuingError = require('@helpers/error.js');
+const { QueuingError } = require('@helpers/error.js');
 const { status } = require('@helpers/http.js');
 
 class MultiStepsService {

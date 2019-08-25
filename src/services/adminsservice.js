@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const path = require('path');
 const exec = require('child_process').exec;
 
-const QueuingError = require('@helpers/error.js');
+const { QueuingError } = require('@helpers/error.js');
 const { status } = require('@helpers/http.js');
 
 class AdminsService {

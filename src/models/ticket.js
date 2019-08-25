@@ -1,5 +1,5 @@
-const Sequelize = require('sequelize');
 const { status } = require('@helpers/http.js');
+const { QueuingError } = require('@helpers/error.js');
 
 module.exports = (sequelize, DataTypes) => {
   const ticket = sequelize.define('ticket', {
@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
 
             break;
           default:
-            throw new Sequelize.BaseError(
+            throw new QueuingError(
               'models::ticket:beforeSave()',
               'Invalid classification',
               status.BAD_REQUEST

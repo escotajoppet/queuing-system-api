@@ -1,6 +1,8 @@
 const uuidv1 = require('uuid/v1');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+const { status } = require('@helpers/http.js');
+const { QueuingError } = require('@helpers/error.js');
 
 module.exports = (sequelize, DataTypes) => {
   const window = sequelize.define('window', {
@@ -29,8 +31,10 @@ module.exports = (sequelize, DataTypes) => {
         });
 
         if (count > 0)
-          throw new Sequelize.BaseError(
-            `Window name '${instance.name}' is taken`
+          throw new QueuingError(
+            'models::window:beforeCreate()',
+            `Window name '${instance.name}' is taken`,
+            status.CONFLICT,
           );
 
         instance.authenticationCode = uuidv1();
