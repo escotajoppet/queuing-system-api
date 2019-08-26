@@ -23,7 +23,7 @@ module.exports = (app, resources) => {
     try {
       const data = await WindowsService.create(req.body);
 
-      res.status(status.OK).send(dispatch({ data }));
+      res.status(status.CREATED).send(dispatch({ data }));
     } catch (err) {
       dispatchErrorResponse(res, err);
     }
