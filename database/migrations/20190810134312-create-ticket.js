@@ -38,7 +38,14 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW'),
       },
-    });
+    })
+      .then(_ => {
+        return queryInterface.sequelize.query(
+          'ALTER TABLE tickets ' +
+          'ADD CONSTRAINT ticketss_unique ' +
+          'UNIQUE (barcode)'
+        );
+      });
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable('tickets');

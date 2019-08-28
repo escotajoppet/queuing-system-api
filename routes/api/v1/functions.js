@@ -3,7 +3,6 @@ const {
   dispatch,
 } = require('@helpers/http.js');
 const {
-  QueuingError,
   dispatchErrorResponse,
 } = require('@helpers/error.js');
 
@@ -22,14 +21,7 @@ module.exports = (app, resources) => {
 
   app.post('/api/v1/functions', async(req, res) => {
     try {
-      if (!req.body.function)
-        throw new QueuingError(
-          'routes::functions:POST:/api/v1/functions',
-          'function object is required',
-          status.BAD_REQUEST
-        );
-
-      const data = await FunctionsService.create(req.body.function);
+      const data = await FunctionsService.create(req.body);
 
       res.status(status.OK).send(dispatch({ data }));
     } catch (err) {
@@ -49,16 +41,9 @@ module.exports = (app, resources) => {
 
   app.patch('/api/v1/functions/:id', async(req, res) => {
     try {
-      if (!req.body.function)
-        throw new QueuingError(
-          'routes::functions:PATCH:/api/v1/functions/:id',
-          'function object is required',
-          status.BAD_REQUEST
-        );
-
       const data = await FunctionsService.update(
         req.params.id,
-        req.body.function
+        req.body
       );
 
       res.status(status.OK).send(dispatch({ data }));

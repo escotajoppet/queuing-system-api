@@ -3,7 +3,6 @@ const {
   dispatch,
 } = require('@helpers/http.js');
 const {
-  QueuingError,
   dispatchErrorResponse,
 } = require('@helpers/error.js');
 
@@ -25,14 +24,7 @@ module.exports = (app, resources) => {
 
   app.post('/api/v1/multi-steps', async(req, res) => {
     try {
-      if (!req.body.multistep)
-        throw new QueuingError(
-          'routes::multisteps:POST:/api/v1/multi-steps',
-          'multistep object is required',
-          status.BAD_REQUEST
-        );
-
-      const data = await MultiStepsService.create(req.body.multistep);
+      const data = await MultiStepsService.create(req.body);
 
       res.status(status.OK).send(dispatch({ data }));
     } catch (err) {
@@ -52,16 +44,9 @@ module.exports = (app, resources) => {
 
   app.patch('/api/v1/multi-steps/:id', async(req, res) => {
     try {
-      if (!req.body.multistep)
-        throw new QueuingError(
-          'routes::multisteps:PATCH:/api/v1/multi-steps/:id',
-          'multistep object is required',
-          status.BAD_REQUEST
-        );
-
       const data = await MultiStepsService.update(
         req.params.id,
-        req.body.multistep
+        req.body
       );
 
       res.status(status.OK).send(dispatch({ data }));
@@ -81,34 +66,27 @@ module.exports = (app, resources) => {
   });
 
   app.post(
-    '/api/v1/multi-steps/:id/functions/:functionId',
+    '/api/v1/multi-steps/:multistepId/functions/:functionId',
     async(req, res) => {
       try {
-        if (!req.body.multistepfunction)
-          throw new QueuingError(
-            'routes::multisteps:POST:' +
-            '/api/v1/multi-steps/:id/functions/:functionId',
-            'multistepfunction object is required',
-            status.BAD_REQUEST
-          );
-
-        const order = req.body.multistepfunction.order;
-
-        if (isNaN(order))
-          throw new QueuingError(
-            'routes::multisteps:POST:' +
-            '/api/v1/multi-steps/:id/functions/:functionId',
-            'order field is invalid',
-            status.BAD_REQUEST
-          );
-
-        const data = await MultiStepFunctionsService.create({
-          multistepId: req.params.id,
-          functionId: req.params.functionId,
-          order: parseInt(order, 10),
-        });
+        const data = await MultiStepFunctionsService.create(
+          req.params,
+          req.body
+        );
 
         res.status(status.CREATED).send(dispatch({ data }));
+      } catch (err) {
+        dispatchErrorResponse(res, err);
+      }
+    });
+
+  app.delete(
+    '/api/v1/multi-steps/:multistepId/functions/:functionId',
+    async(req, res) => {
+      try {
+        const data = await MultiStepFunctionsService.delete(req.params);
+
+        res.status(status.OK).send(dispatch({ data }));
       } catch (err) {
         dispatchErrorResponse(res, err);
       }

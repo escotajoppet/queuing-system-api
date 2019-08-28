@@ -16,6 +16,13 @@ module.exports = (sequelize, DataTypes) => {
     number: DataTypes.INTEGER,
     functionId: DataTypes.INTEGER,
   }, {
+    indexes: [
+      {
+        unique: true,
+        fields: ['barcode'],
+      },
+    ],
+  }, {
     hooks: {
       async beforeSave(instance) {
         switch (instance.classification) {
@@ -49,6 +56,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
   });
+
   ticket.associate = models => {
     // associations can be defined here
 
