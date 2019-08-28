@@ -1,0 +1,167 @@
+openapi: 3.0.1
+info:
+  title: defaultTitle
+  description: defaultDescription
+  version: "1.0"
+servers:
+- url: http://localhost:3001
+paths:
+  /api/v1/admin/authenticate:
+    post:
+      description: Authenticate login of admin
+      requestBody:
+        $ref: '#/components/requestBodies/Admin_form'
+      responses:
+        200:
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standard_response'
+              example:
+                data: {}
+                success: true
+        400:
+          description: No admin object found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standard_response'
+              example:
+                data: {}
+                error: AdminsService::authenticate() admin object is missing
+                success: false
+        401:
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standard_response'
+              example:
+                data: {}
+                error: Invalid Password
+                success: false
+      servers:
+      - url: http://localhost:3001
+    servers:
+    - url: http://localhost:3001
+  /api/v1/admin/password:
+    patch:
+      description: Update password
+      requestBody:
+        $ref: '#/components/requestBodies/Admin_form'
+      responses:
+        200:
+          description: Password successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+              example:
+                data: {}
+                success: true
+        400:
+          description: No admin object found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standard_response'
+              example:
+                data: {}
+                error: AdminsService::authenticate() admin object is missing
+                success: false
+      servers:
+      - url: http://localhost:3001
+    servers:
+    - url: http://localhost:3001
+components:
+  schemas:
+    standard_response:
+      type: object
+      properties:
+        data:
+          type: object
+        error:
+          $ref: '#/components/schemas/error'
+        success:
+          $ref: '#/components/schemas/success'
+    error:
+      type: string
+      description: Error message
+    success:
+      type: boolean
+      description: Indicates that the request is successful
+    inline_response_200:
+      type: object
+      properties:
+        data:
+          type: object
+        error:
+          type: string
+          description: Error message
+        success:
+          type: boolean
+          description: Indicates that the request is successful
+  responses:
+    Authenticate_200:
+      description: Authentication successful
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/standard_response'
+          example:
+            data: {}
+            success: true
+    Admin_password_updated_200:
+      description: Password successfully updated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+              error:
+                type: string
+                description: Error message
+              success:
+                type: boolean
+                description: Indicates that the request is successful
+          example:
+            data: {}
+            success: true
+    Admin_400:
+      description: No admin object found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/standard_response'
+          example:
+            data: {}
+            error: AdminsService::authenticate() admin object is missing
+            success: false
+    Admin_401:
+      description: Authentication failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/standard_response'
+          example:
+            data: {}
+            error: Invalid Password
+            success: false
+  requestBodies:
+    Admin_form:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              admin:
+                type: object
+                properties:
+                  password:
+                    type: string
+            example:
+              admin:
+                password: password
