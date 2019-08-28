@@ -34,15 +34,15 @@ class MultiStepsService {
       });
   }
 
-  create(data) {
-    return this.MultiStep.create(data)
+  create(body) {
+    return this.MultiStep.create(this._sanitizeParams(body))
       .then(multistep => multistep);
   }
 
-  update(id, data) {
+  update(id, body) {
     return this.getOne(id)
       .then(multistep => {
-        return multistep.update(data);
+        return multistep.update(this._sanitizeParams(body));
       })
       .then(multistep => multistep);
   }
@@ -52,6 +52,28 @@ class MultiStepsService {
       .then(multistep => {
         return multistep.destroy();
       });
+  }
+
+  // PRIVATE METHODS
+
+  _sanitizeParams(body) {
+    if (!body.multistep)
+      throw new QueuingError(
+        'MultistepsServices::_sanitizeParams()',
+        'multistep object is missing',
+        status.BAD_REQUEST
+      );
+
+    const data = body.multistep;
+    const permitted = [
+      'name',
+    ];
+
+    for (const field in data)
+      if (!permitted.includes(field))
+        delete data[field];
+
+    return data;
   }
 }
 

@@ -1,4 +1,4 @@
-const QueuingError = require('@helpers/error.js');
+const { QueuingError } = require('@helpers/error.js');
 const { status } = require('@helpers/http.js');
 
 class FunctionsService {
@@ -27,15 +27,15 @@ class FunctionsService {
       });
   }
 
-  create(data) {
-    return this.Function.create(data)
+  create(body) {
+    return this.Function.create(this._sanitizeParams(body))
       .then(functionMod => functionMod);
   }
 
-  update(id, data) {
+  update(id, body) {
     return this.getOne(id)
       .then(functionMod => {
-        return functionMod.update(data);
+        return functionMod.update(this._sanitizeParams(body));
       })
       .then(functionMod => functionMod);
   }
@@ -45,6 +45,28 @@ class FunctionsService {
       .then(functionMod => {
         return functionMod.destroy();
       });
+  }
+
+  // PRIVATE METHODS
+
+  _sanitizeParams(body) {
+    if (!body.function)
+      throw new QueuingError(
+        'FunctionsService::_sanitizeParams()',
+        'function object is missing',
+        status.BAD_REQUEST
+      );
+
+    const data = body.function;
+    const permitted = [
+      'name',
+    ];
+
+    for (const field in data)
+      if (!permitted.includes(field))
+        delete data[field];
+
+    return data;
   }
 }
 

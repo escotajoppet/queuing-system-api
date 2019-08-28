@@ -13,7 +13,8 @@ class AdminsService {
     );
   }
 
-  updatePassword(data) {
+  updatePassword(body) {
+    const data = this._sanitizeParams(body);
     const saltRounds = 10;
     const myPlaintextPassword = data.password;
 
@@ -34,11 +35,34 @@ class AdminsService {
       });
   }
 
-  authenticate(data) {
+  authenticate(body) {
+    const data = this._sanitizeParams(body);
     const hash = fs.readFileSync(this.passwordFile, 'utf8');
 
     return bcrypt.compare(data.password, hash)
       .then(res => res);
+  }
+
+  // PRIVATE METHODS
+
+  _sanitizeParams(body) {
+    if (!body.admin)
+      throw new QueuingError(
+        'AdminsService::authenticate()',
+        'admin object is missing',
+        status.BAD_REQUEST
+      );
+
+    const data = body.admin;
+    const permitted = [
+      'password',
+    ];
+
+    for (const field in data)
+      if (!permitted.includes(field))
+        delete data[field];
+
+    return data;
   }
 }
 

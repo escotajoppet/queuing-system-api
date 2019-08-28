@@ -21,7 +21,7 @@ module.exports = {
         defaultValue: Sequelize.fn('NOW'),
       },
     })
-      .then(function() {
+      .then(_ => {
         return queryInterface.sequelize.query(
           'ALTER TABLE functions ' +
           'ADD CONSTRAINT functions_unique ' +

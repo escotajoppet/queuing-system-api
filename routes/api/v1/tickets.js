@@ -3,7 +3,6 @@ const {
   dispatch,
 } = require('@helpers/http.js');
 const {
-  QueuingError,
   dispatchErrorResponse,
 } = require('@helpers/error.js');
 
@@ -22,14 +21,7 @@ module.exports = (app, resources) => {
 
   app.post('/api/v1/tickets', async(req, res) => {
     try {
-      if (!req.body.ticket)
-        throw new QueuingError(
-          'routes::tickets:POST:/api/v1/tickets',
-          'ticket object is required',
-          status.BAD_REQUEST
-        );
-
-      const data = await TicketsService.create(req.body.ticket);
+      const data = await TicketsService.create(req.body);
 
       res.status(status.OK).send(dispatch({ data }));
     } catch (err) {
@@ -49,16 +41,9 @@ module.exports = (app, resources) => {
 
   app.patch('/api/v1/tickets/:id', async(req, res) => {
     try {
-      if (!req.body.ticket)
-        throw new QueuingError(
-          'routes::tickets:PATCH:/api/v1/tickets/:id',
-          'ticket object is required',
-          status.BAD_REQUEST
-        );
-
       const data = await TicketsService.update(
         req.params.id,
-        req.body.ticket
+        req.body
       );
 
       res.status(status.OK).send(dispatch({ data }));
