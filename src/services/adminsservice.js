@@ -41,12 +41,12 @@ class AdminsService {
 
     return bcrypt.compare(data.password, hash)
       .then(res => {
-        if(!res)
+        if (!res)
           throw new QueuingError(
             'AdminsService::authenticate()',
             'Invalid password',
             status.UNAUTHORIZED
-          )
+          );
 
         return res;
       });
