@@ -40,7 +40,16 @@ class AdminsService {
     const hash = fs.readFileSync(this.passwordFile, 'utf8');
 
     return bcrypt.compare(data.password, hash)
-      .then(res => res);
+      .then(res => {
+        if(!res)
+          throw new QueuingError(
+            'AdminsService::authenticate()',
+            'Invalid password',
+            status.UNAUTHORIZED
+          )
+
+        return res;
+      });
   }
 
   // PRIVATE METHODS
@@ -48,7 +57,7 @@ class AdminsService {
   _sanitizeParams(body) {
     if (!body.admin)
       throw new QueuingError(
-        'AdminsService::authenticate()',
+        'AdminsService::_sanitizeParams()',
         'admin object is missing',
         status.BAD_REQUEST
       );

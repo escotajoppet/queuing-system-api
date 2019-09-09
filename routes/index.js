@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
+const { status, dispatch } = require('@helpers/http.js');
 
 // Set up the express app
 module.exports = {
@@ -34,6 +35,16 @@ module.exports = {
         for (const file of routeFiles)
           addRoute(version, `${routePath}/${version}/${file}`);
       });
+
+    app.use((err, req, res, next) => {
+      res.status(err.status).send(
+        dispatch({
+          success: false,
+          status: err.status || status.INTERNAL_SERVER_ERROR,
+          error: err.message || status[err.status],
+        })
+      );
+    });
 
     app.listen(PORT, _ => {
       console.log(`\nQueuing server running on port ${PORT}...`);
